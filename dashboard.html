@@ -653,24 +653,24 @@
     if (!token) { window.location.replace('index.html'); return; }
 
     var staff = getStaff();
-    if (staff) fillStaff(staff);
+    if (staff) { try { fillStaff(staff); } catch (e) {} }
 
-    // verify token กับ API (เผื่อหมดอายุ/ถูกแก้) — ถ้าไม่ผ่านให้ logout
+    // แสดงหน้าไว้ก่อนเสมอ (มี token แล้ว) — กันหน้าขาวถ้า /me ช้า/พัง
+    document.getElementById('app').style.display = '';
+
+    // verify token กับ API (เผื่อหมดอายุ/ถูกแก้) — ถ้า 401 จริงค่อย logout
     fetch(API_BASE + '/me', { headers: { 'Authorization': 'Bearer ' + token } })
       .then(function (res) {
         if (res.status === 401) { logout(); return null; }
         return res.ok ? res.json() : null;
       })
       .then(function (data) {
-        if (data) fillStaff(data);
-        document.getElementById('app').style.display = '';   // ผ่านแล้วค่อยโชว์
-        loadDashboard();
+        if (data) { try { fillStaff(data); } catch (e) {} }
       })
-      .catch(function () {
-        // network error: ยังโชว์หน้าได้ (มี staff จาก storage แล้ว) ไม่เตะออก
-        document.getElementById('app').style.display = '';
-        loadDashboard();
-      });
+      .catch(function () { /* network error: ไม่เตะออก มี staff จาก storage แล้ว */ });
+
+    // โหลดข้อมูล dashboard (แยกจาก /me — ถึง /me พังก็ยังโหลดข้อมูลได้)
+    try { loadDashboard(); } catch (e) { console.error('loadDashboard error:', e); }
   })();
 
   function fillStaff(s) {
