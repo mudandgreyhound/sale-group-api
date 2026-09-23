@@ -14,8 +14,7 @@
   a { color: var(--accent); text-decoration: none; }
   a:hover { color: var(--accent-dark); }
   table { border-collapse: collapse; }
-  /* ซ่อนหน้าไว้ก่อนจนกว่า auth guard จะผ่าน (กันเห็นหน้าแวบก่อนเด้ง) */
-  #app { display: none; }
+  /* หน้าแสดง default; ถ้าไม่มี token guard จะ redirect ออกเองก่อนเห็นข้อมูล */
 </style>
 </head>
 <body>
@@ -699,8 +698,16 @@
   }
 
   function loadDashboard() {
+    // หาวันที่ล่าสุดที่มีข้อมูลก่อน (กัน default=เมื่อวานที่ยังไม่มีข้อมูล -> ฿0)
+    apiGet('/latest-date').then(function (dd) {
+      var q = (dd && dd.date_key) ? ('?date=' + dd.date_key) : '';
+      loadWidgets(q);
+    });
+  }
+
+  function loadWidgets(q) {
     // KPI overview
-    apiGet('/overview').then(function (d) {
+    apiGet('/overview' + q).then(function (d) {
       if (!d) return;
       setText('kpiNetSales', baht(d.net_sales));
       setText('kpiGrossSales', baht(d.gross_sales));
@@ -716,7 +723,7 @@
     });
 
     // Top Menu
-    apiGet('/top-menu?limit=5').then(function (rows) {
+    apiGet('/top-menu' + (q ? q + '&limit=5' : '?limit=5')).then(function (rows) {
       if (!rows) return;
       var box = document.getElementById('topMenuList');
       if (!box) return;
@@ -737,7 +744,7 @@
     });
 
     // Branch Performance table
-    apiGet('/branch-performance?limit=5').then(function (rows) {
+    apiGet('/branch-performance' + (q ? q + '&limit=5' : '?limit=5')).then(function (rows) {
       if (!rows) return;
       var body = document.getElementById('branchTableBody');
       if (!body) return;
