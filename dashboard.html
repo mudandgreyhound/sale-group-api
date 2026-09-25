@@ -144,22 +144,18 @@
           <p style="margin: 0; font-size: 13px; color: #7B7F8C;">ภาพรวมยอดขายทั้งหมดของ Greyhound Group — GH · AH · BH · DD · ABP</p>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 7px; padding: 8px 13px; background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; font-weight: 500; color: #14171F;">
-            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#7B7F8C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="15" height="14" rx="1.6"></rect><line x1="2.5" y1="7.7" x2="17.5" y2="7.7"></line><line x1="6" y1="2" x2="6" y2="5"></line><line x1="14" y1="2" x2="14" y2="5"></line></svg>
-            1 – 18 ก.ย. 2026
-            <svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="#7B7F8C" stroke-width="2"><polyline points="5,8 10,13 15,8"></polyline></svg>
-          </div>
-          <div style="display: flex; align-items: center; gap: 7px; padding: 8px 13px; background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; font-weight: 500; color: #14171F;">
-            <span id="brandFilterLabel">ทุกแบรนด์</span>
-            <svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="#7B7F8C" stroke-width="2"><polyline points="5,8 10,13 15,8"></polyline></svg>
-          </div>
-          <div style="display: flex; align-items: center; gap: 7px; padding: 8px 13px; background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; font-weight: 500; color: #14171F;">
-            ทุกสาขา
-            <svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="#7B7F8C" stroke-width="2"><polyline points="5,8 10,13 15,8"></polyline></svg>
-          </div>
-          <button type="button" style="padding: 9px 18px; background: var(--accent); color: #fff; border: none; border-radius: 9px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Apply</button>
-          <button type="button" style="padding: 9px 14px; background: transparent; color: #7B7F8C; border: none; font-size: 12.5px; font-weight: 600; cursor: pointer;">Reset</button>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <input type="date" id="fltFrom" style="padding: 8px 11px; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; color: #14171F; font-family: 'IBM Plex Sans',sans-serif;">
+          <span style="color: #9498A6; font-size: 12px;">–</span>
+          <input type="date" id="fltTo" style="padding: 8px 11px; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; color: #14171F; font-family: 'IBM Plex Sans',sans-serif;">
+          <select id="fltBrand" style="padding: 8px 11px; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; color: #14171F; background: #FFFFFF; font-family: 'IBM Plex Sans',sans-serif; cursor: pointer;">
+            <option value="">ทุกแบรนด์</option>
+          </select>
+          <select id="fltBranch" style="padding: 8px 11px; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; color: #14171F; background: #FFFFFF; font-family: 'IBM Plex Sans',sans-serif; cursor: pointer;">
+            <option value="">ทุกสาขา</option>
+          </select>
+          <button type="button" onclick="applyFilters()" style="padding: 9px 18px; background: var(--accent); color: #fff; border: none; border-radius: 9px; font-size: 12.5px; font-weight: 600; cursor: pointer;">Apply</button>
+          <button type="button" onclick="resetFilters()" style="padding: 9px 14px; background: transparent; color: #7B7F8C; border: none; font-size: 12.5px; font-weight: 600; cursor: pointer;">Reset</button>
         </div>
       </div>
 
@@ -697,13 +693,85 @@
       .catch(function () { return null; });
   }
 
+  // ── สถานะ filter ปัจจุบัน ──
+  var currentQuery = '';   // query string ที่ใช้อยู่ (date/brand/branch)
+
   function loadDashboard() {
+    populateFilters();
     // หาวันที่ล่าสุดที่มีข้อมูลก่อน (กัน default=เมื่อวานที่ยังไม่มีข้อมูล -> ฿0)
     apiGet('/latest-date').then(function (dd) {
       var q = (dd && dd.date_key) ? ('?date=' + dd.date_key) : '';
+      // set ค่า date picker เป็นวันล่าสุด
+      if (dd && dd.date_key) {
+        var s = String(dd.date_key);
+        var iso = s.slice(0,4) + '-' + s.slice(4,6) + '-' + s.slice(6,8);
+        var f = document.getElementById('fltFrom'), t = document.getElementById('fltTo');
+        if (f && !f.value) f.value = iso;
+        if (t && !t.value) t.value = iso;
+      }
+      currentQuery = q;
       loadWidgets(q);
     });
   }
+
+  // เติม dropdown แบรนด์ + สาขา จาก API
+  function populateFilters() {
+    apiGet('/brands').then(function (rows) {
+      if (!rows) return;
+      var sel = document.getElementById('fltBrand');
+      if (!sel || sel.options.length > 1) return;
+      rows.forEach(function (b) {
+        var o = document.createElement('option');
+        o.value = b.brand_key; o.textContent = b.brand_name;
+        sel.appendChild(o);
+      });
+    });
+    loadBranchOptions('');
+  }
+  function loadBranchOptions(brandKey) {
+    apiGet('/branches' + (brandKey ? '?brand=' + brandKey : '')).then(function (rows) {
+      if (!rows) return;
+      var sel = document.getElementById('fltBranch');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">ทุกสาขา</option>';
+      rows.forEach(function (b) {
+        var o = document.createElement('option');
+        o.value = b.branch_key; o.textContent = b.branch_name;
+        sel.appendChild(o);
+      });
+    });
+  }
+
+  // สร้าง query จาก filter ปัจจุบัน
+  function buildQuery() {
+    var f = document.getElementById('fltFrom').value;
+    var t = document.getElementById('fltTo').value;
+    var brand = document.getElementById('fltBrand').value;
+    var branch = document.getElementById('fltBranch').value;
+    var parts = [];
+    if (f && t) {
+      parts.push('date_from=' + f.replace(/-/g,''));
+      parts.push('date_to=' + t.replace(/-/g,''));
+    }
+    if (brand) parts.push('brand=' + brand);
+    if (branch) parts.push('branch=' + branch);
+    return parts.length ? '?' + parts.join('&') : '';
+  }
+
+  function applyFilters() {
+    currentQuery = buildQuery();
+    loadWidgets(currentQuery);
+  }
+  function resetFilters() {
+    document.getElementById('fltBrand').value = '';
+    document.getElementById('fltBranch').value = '';
+    loadBranchOptions('');
+    loadDashboard();
+  }
+  // เปลี่ยนแบรนด์ -> โหลดสาขาของแบรนด์นั้น
+  document.addEventListener('change', function (e) {
+    if (e.target && e.target.id === 'fltBrand') loadBranchOptions(e.target.value);
+  });
 
   function loadWidgets(q) {
     // KPI overview
