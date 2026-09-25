@@ -141,7 +141,7 @@
             <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 23px; font-weight: 600; color: #14171F;">Sales Overview</h1>
             <span style="font-size: 11px; font-weight: 600; color: #3E7B5D; background: #E1EEE6; padding: 3px 8px; border-radius: 20px;"><span id="dataDate">กำลังโหลด…</span></span>
           </div>
-          <p style="margin: 0; font-size: 13px; color: #7B7F8C;">ภาพรวมยอดขายทั้งหมดของ Greyhound Group — ทุกแบรนด์ ทุกสาขา</p>
+          <p style="margin: 0; font-size: 13px; color: #7B7F8C;">ภาพรวมยอดขายทั้งหมดของ Greyhound Group — GH · AH · BH · DD · ABP</p>
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
@@ -151,7 +151,7 @@
             <svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="#7B7F8C" stroke-width="2"><polyline points="5,8 10,13 15,8"></polyline></svg>
           </div>
           <div style="display: flex; align-items: center; gap: 7px; padding: 8px 13px; background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; font-weight: 500; color: #14171F;">
-            ทุกแบรนด์ (GH · AH · BH)
+            <span id="brandFilterLabel">ทุกแบรนด์</span>
             <svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="#7B7F8C" stroke-width="2"><polyline points="5,8 10,13 15,8"></polyline></svg>
           </div>
           <div style="display: flex; align-items: center; gap: 7px; padding: 8px 13px; background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 9px; font-size: 12.5px; font-weight: 500; color: #14171F;">
@@ -291,7 +291,7 @@
             </div>
           </div>
 
-          <svg viewBox="0 0 620 210" style="width: 100%; height: 200px; display: block; overflow: visible;">
+          <div id="salesTrendWrap"><svg viewBox="0 0 620 210" style="width: 100%; height: 200px; display: block; overflow: visible;">
             <line x1="20" y1="180" x2="600" y2="180" stroke="#E7E5DE" stroke-width="1"></line>
             <line x1="20" y1="120" x2="600" y2="120" stroke="#EFEDE5" stroke-width="1"></line>
             <line x1="20" y1="60" x2="600" y2="60" stroke="#EFEDE5" stroke-width="1"></line>
@@ -313,7 +313,7 @@
             <text x="407" y="198" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#9498A6" text-anchor="middle">ศ.</text>
             <text x="503" y="198" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="var(--accent)" font-weight="600" text-anchor="middle">ส.</text>
             <text x="600" y="198" font-family="IBM Plex Sans, sans-serif" font-size="11" fill="#9498A6" text-anchor="middle">อา.</text>
-          </svg>
+          </svg></div>
         </div>
 
         <!-- Alerts -->
@@ -367,10 +367,10 @@
               <div style="font-family: 'Space Grotesk', sans-serif; font-size: 15.5px; font-weight: 600; color: #14171F;">Hourly Sales</div>
               <div style="font-size: 12px; color: #9498A6;">ยอดขายรายชั่วโมง — ช่วงเวลาขายดี</div>
             </div>
-            <span style="font-size: 11px; font-weight: 700; color: var(--accent); background: #F1DCCB; padding: 3px 9px; border-radius: 20px;">Peak 19:00–20:00</span>
+            <span style="font-size: 11px; font-weight: 700; color: var(--accent); background: #F1DCCB; padding: 3px 9px; border-radius: 20px;">Peak <span id="peakBadge">19:00–20:00</span>
           </div>
 
-          <div style="display: flex; align-items: flex-end; gap: 8px; height: 130px; padding: 0 2px;">
+          <div id="hourlyBars" style="display: flex; align-items: flex-end; gap: 8px; height: 130px; padding: 0 2px;">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;"><div style="width: 100%; max-width: 22px; height: 18px; background: #E4E6F0; border-radius: 4px 4px 0 0;"></div><span style="font-size: 9.5px; color: #9498A6;">10</span></div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;"><div style="width: 100%; max-width: 22px; height: 34px; background: #E4E6F0; border-radius: 4px 4px 0 0;"></div><span style="font-size: 9.5px; color: #9498A6;">11</span></div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;"><div style="width: 100%; max-width: 22px; height: 77px; background: #C7CCDB; border-radius: 4px 4px 0 0;"></div><span style="font-size: 9.5px; color: #9498A6;">12</span></div>
@@ -392,7 +392,7 @@
           <div style="font-family: 'Space Grotesk', sans-serif; font-size: 15.5px; font-weight: 600; color: #14171F;">Sales by Category</div>
           <div style="font-size: 12px; color: #9498A6; margin-bottom: 16px;">สัดส่วนยอดขายตามหมวดสินค้า</div>
 
-          <div style="display: flex; align-items: center; gap: 24px;">
+          <div id="categoryWrap" style="display: flex; align-items: center; gap: 24px;">
             <div style="width: 118px; height: 118px; border-radius: 50%; flex: 0 0 118px; background: conic-gradient(var(--accent) 0% 52%, #2F6F5E 52% 76%, #C9A227 76% 90%, #5B6478 90% 97%, #E8B89B 97% 100%); position: relative;">
               <div style="position: absolute; inset: 20px; background: #FFFFFF; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <span style="font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: #14171F;">5</span>
@@ -543,7 +543,7 @@
         <div style="background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 14px; padding: 20px 22px;">
           <div style="font-family: 'Space Grotesk', sans-serif; font-size: 14.5px; font-weight: 600; color: #14171F; margin-bottom: 3px;">Payment Method</div>
           <div style="font-size: 11.5px; color: #9498A6; margin-bottom: 14px;">สัดส่วนช่องทางการชำระเงิน</div>
-          <div style="display: flex; height: 10px; border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
+          <div id="paymentWrap"><div style="display: flex; height: 10px; border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
             <div style="width: 38%; background: var(--accent);"></div>
             <div style="width: 30%; background: #2F6F5E;"></div>
             <div style="width: 18%; background: #C9A227;"></div>
@@ -555,13 +555,13 @@
             <div style="display: flex; justify-content: space-between; font-size: 11.5px;"><span style="display: flex; align-items: center; gap: 6px; color: #14171F;"><span style="width: 7px; height: 7px; border-radius: 2px; background: #2F6F5E;"></span>QR / PromptPay</span><span style="color: #7B7F8C;">30%</span></div>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px;"><span style="display: flex; align-items: center; gap: 6px; color: #14171F;"><span style="width: 7px; height: 7px; border-radius: 2px; background: #C9A227;"></span>Cash</span><span style="color: #7B7F8C;">18%</span></div>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px;"><span style="display: flex; align-items: center; gap: 6px; color: #14171F;"><span style="width: 7px; height: 7px; border-radius: 2px; background: #5B6478;"></span>Food Delivery</span><span style="color: #7B7F8C;">10%</span></div>
-          </div>
+          </div></div>
         </div>
 
         <div style="background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 14px; padding: 20px 22px;">
           <div style="font-family: 'Space Grotesk', sans-serif; font-size: 14.5px; font-weight: 600; color: #14171F; margin-bottom: 3px;">Channel</div>
           <div style="font-size: 11.5px; color: #9498A6; margin-bottom: 14px;">Dine-in / Take Away / Delivery</div>
-          <div style="display: flex; height: 10px; border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
+          <div id="channelWrap"><div style="display: flex; height: 10px; border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
             <div style="width: 64%; background: var(--accent);"></div>
             <div style="width: 21%; background: #C9A227;"></div>
             <div style="width: 15%; background: #2F6F5E;"></div>
@@ -570,7 +570,7 @@
             <div style="display: flex; justify-content: space-between; font-size: 11.5px;"><span style="display: flex; align-items: center; gap: 6px; color: #14171F;"><span style="width: 7px; height: 7px; border-radius: 2px; background: var(--accent);"></span>Dine-in</span><span style="color: #7B7F8C;">64% · ฿822k</span></div>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px;"><span style="display: flex; align-items: center; gap: 6px; color: #14171F;"><span style="width: 7px; height: 7px; border-radius: 2px; background: #C9A227;"></span>Take Away</span><span style="color: #7B7F8C;">21% · ฿270k</span></div>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px;"><span style="display: flex; align-items: center; gap: 6px; color: #14171F;"><span style="width: 7px; height: 7px; border-radius: 2px; background: #2F6F5E;"></span>Delivery</span><span style="color: #7B7F8C;">15% · ฿193k</span></div>
-          </div>
+          </div></div>
         </div>
 
         <div style="background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 14px; padding: 20px 22px;">
@@ -758,6 +758,122 @@
           + '<td style="' + td + 'color:#7B7F8C;text-align:right;">' + Number(r.customers).toLocaleString('en-US') + '</td>'
           + '</tr>';
       }).join('');
+    });
+
+    // ── Hourly Sales ──
+    var palette = ['#C7CCDB','#E4E6F0'];
+    apiGet('/hourly' + q).then(function (rows) {
+      if (!rows || !rows.length) return;
+      var box = document.getElementById('hourlyBars'); if (!box) return;
+      var max = Math.max.apply(null, rows.map(function(r){return r.net_sales;})) || 1;
+      var peak = rows.reduce(function(a,b){return b.net_sales>a.net_sales?b:a;}, rows[0]);
+      box.innerHTML = rows.map(function (r) {
+        var h = Math.max(6, Math.round(r.net_sales / max * 120));
+        var isPeak = r.hour === peak.hour;
+        var bg = isPeak ? 'var(--accent)' : (r.net_sales > max*0.5 ? '#C7CCDB' : '#E4E6F0');
+        var lblColor = isPeak ? 'var(--accent)' : '#9498A6';
+        var lblW = isPeak ? '700' : '400';
+        return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">'
+          + '<div style="width:100%;max-width:22px;height:' + h + 'px;background:' + bg + ';border-radius:4px 4px 0 0;"></div>'
+          + '<span style="font-size:9.5px;color:' + lblColor + ';font-weight:' + lblW + ';">' + r.hour + '</span></div>';
+      }).join('');
+      // อัปเดต peak badge
+      var pl = String(peak.hour).padStart(2,'0');
+      var pb = document.getElementById('peakBadge');
+      if (pb) pb.textContent = 'Peak ' + pl + ':00–' + String(peak.hour+1).padStart(2,'0') + ':00';
+    });
+
+    // ── Sales by Category (donut + legend) ──
+    var catColors = ['var(--accent)','#2F6F5E','#C9A227','#5B6478','#E8B89B','#8B7355','#6B8E9E'];
+    apiGet('/category' + q).then(function (rows) {
+      if (!rows || !rows.length) return;
+      var wrap = document.getElementById('categoryWrap'); if (!wrap) return;
+      var top = rows.slice(0,7);
+      var total = top.reduce(function(s,r){return s+r.net_sales;},0) || 1;
+      var acc = 0, stops = [];
+      top.forEach(function(r,i){
+        var start = acc/total*100; acc += r.net_sales; var end = acc/total*100;
+        stops.push(catColors[i%catColors.length]+' '+start.toFixed(1)+'% '+end.toFixed(1)+'%');
+      });
+      var legend = top.map(function(r,i){
+        var pct = Math.round(r.net_sales/total*100);
+        return '<div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">'
+          + '<span style="display:flex;align-items:center;gap:7px;color:#14171F;font-weight:500;"><span style="width:8px;height:8px;border-radius:2px;background:'+catColors[i%catColors.length]+';"></span>'+(r.category_th||r.category)+'</span>'
+          + '<span style="color:#7B7F8C;">'+pct+'% · '+baht(r.net_sales)+'</span></div>';
+      }).join('');
+      wrap.innerHTML = '<div style="width:118px;height:118px;border-radius:50%;flex:0 0 118px;background:conic-gradient('+stops.join(',')+');position:relative;">'
+        + '<div style="position:absolute;inset:20px;background:#FFFFFF;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;">'
+        + '<span style="font-family:\'Space Grotesk\',sans-serif;font-size:15px;font-weight:700;color:#14171F;">'+top.length+'</span>'
+        + '<span style="font-size:9.5px;color:#9498A6;">categories</span></div></div>'
+        + '<div style="display:flex;flex-direction:column;gap:9px;flex:1;">'+legend+'</div>';
+    });
+
+    // ── Payment Method ──
+    var payColors = ['var(--accent)','#2F6F5E','#C9A227','#5B6478','#E4E6F0'];
+    apiGet('/payment' + q).then(function (rows) {
+      if (!rows || !rows.length) return;
+      var wrap = document.getElementById('paymentWrap'); if (!wrap) return;
+      var total = rows.reduce(function(s,r){return s+r.amount;},0) || 1;
+      var bar = rows.slice(0,5).map(function(r,i){
+        return '<div style="width:'+(r.amount/total*100)+'%;background:'+payColors[i%payColors.length]+';"></div>';
+      }).join('');
+      var legend = rows.slice(0,5).map(function(r,i){
+        return '<div style="display:flex;justify-content:space-between;font-size:11.5px;"><span style="display:flex;align-items:center;gap:6px;color:#14171F;"><span style="width:7px;height:7px;border-radius:2px;background:'+payColors[i%payColors.length]+';"></span>'+r.method+'</span><span style="color:#7B7F8C;">'+Math.round(r.amount/total*100)+'%</span></div>';
+      }).join('');
+      wrap.innerHTML = '<div style="display:flex;height:10px;border-radius:6px;overflow:hidden;margin-bottom:12px;">'+bar+'</div>'
+        + '<div style="display:flex;flex-direction:column;gap:7px;">'+legend+'</div>';
+    });
+
+    // ── Channel (Dine-in / Delivery — ข้อมูลจริงจาก PriceMode) ──
+    var chColors = {'DINE_IN':'var(--accent)','TAKE_AWAY':'#C9A227','DELIVERY':'#2F6F5E','DRIVE_THRU':'#5B6478','OTHER':'#E4E6F0'};
+    apiGet('/channel' + q).then(function (rows) {
+      if (!rows || !rows.length) return;
+      var wrap = document.getElementById('channelWrap'); if (!wrap) return;
+      var total = rows.reduce(function(s,r){return s+r.net_sales;},0) || 1;
+      var bar = rows.map(function(r){
+        return '<div style="width:'+(r.net_sales/total*100)+'%;background:'+(chColors[r.group]||'#999')+';"></div>';
+      }).join('');
+      var legend = rows.map(function(r){
+        return '<div style="display:flex;justify-content:space-between;font-size:11.5px;"><span style="display:flex;align-items:center;gap:6px;color:#14171F;"><span style="width:7px;height:7px;border-radius:2px;background:'+(chColors[r.group]||'#999')+';"></span>'+r.channel+'</span><span style="color:#7B7F8C;">'+Math.round(r.net_sales/total*100)+'% · '+baht(r.net_sales)+'</span></div>';
+      }).join('');
+      wrap.innerHTML = '<div style="display:flex;height:10px;border-radius:6px;overflow:hidden;margin-bottom:12px;">'+bar+'</div>'
+        + '<div style="display:flex;flex-direction:column;gap:7px;">'+legend+'</div>';
+    });
+
+    // ── Sales Trend (7 วัน) ──
+    apiGet('/sales-trend?days=7' + (q ? '&' + q.slice(1) : '')).then(function (rows) {
+      if (!rows || rows.length < 2) return;
+      var wrap = document.getElementById('salesTrendWrap'); if (!wrap) return;
+      var max = Math.max.apply(null, rows.map(function(r){return r.net_sales;})) || 1;
+      var W=620,H=210,pad=20,top=20,bot=180;
+      var n = rows.length;
+      var pts = rows.map(function(r,i){
+        var x = pad + i*(W-2*pad)/(n-1);
+        var y = top + (1 - r.net_sales/max)*(bot-top);
+        return [x,y];
+      });
+      var line = pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ');
+      var area = line + ' L'+pts[n-1][0].toFixed(1)+',180 L'+pts[0][0].toFixed(1)+',180 Z';
+      var peak = pts.reduce(function(a,p,i){return rows[i].net_sales>rows[a].net_sales?i:a;},0);
+      var dots = pts.map(function(p,i){
+        var r = i===peak?4.6:3.2;
+        var f = i===peak?'var(--accent)':'#FFFFFF';
+        return '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+r+'" fill="'+f+'" stroke="var(--accent)" stroke-width="2"></circle>';
+      }).join('');
+      var labels = rows.map(function(r,i){
+        return '<text x="'+pts[i][0].toFixed(1)+'" y="198" font-size="11" fill="'+(i===peak?'var(--accent)':'#9498A6')+'" text-anchor="middle">'+(r.day||'')+'</text>';
+      }).join('');
+      var pk = pts[peak];
+      wrap.innerHTML = '<svg viewBox="0 0 620 210" style="width:100%;height:200px;display:block;overflow:visible;">'
+        + '<line x1="20" y1="180" x2="600" y2="180" stroke="#E7E5DE"/>'
+        + '<line x1="20" y1="120" x2="600" y2="120" stroke="#EFEDE5"/>'
+        + '<line x1="20" y1="60" x2="600" y2="60" stroke="#EFEDE5"/>'
+        + '<path d="'+area+'" fill="var(--accent)" opacity="0.12"></path>'
+        + '<path d="'+line+'" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>'
+        + dots
+        + '<rect x="'+(pk[0]-31).toFixed(1)+'" y="'+(pk[1]-22).toFixed(1)+'" width="62" height="20" rx="6" fill="#14171F"></rect>'
+        + '<text x="'+pk[0].toFixed(1)+'" y="'+(pk[1]-8).toFixed(1)+'" font-size="11" font-weight="600" fill="#FFFFFF" text-anchor="middle">'+baht(rows[peak].net_sales/1000)+'k</text>'
+        + labels + '</svg>';
     });
   }
 </script>
