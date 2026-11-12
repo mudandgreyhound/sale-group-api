@@ -720,11 +720,23 @@
       if (!rows) return;
       var sel = document.getElementById('fltBrand');
       if (!sel || sel.options.length > 1) return;
-      rows.forEach(function (b) {
-        var o = document.createElement('option');
-        o.value = b.brand_key; o.textContent = b.brand_name;
-        sel.appendChild(o);
-      });
+      // รวม GH + AH + BH เป็น "Greyhound Cafe" อันเดียว (ส่ง brand=key หลายตัวคั่น comma)
+      // ส่วน Dunkin Donut / ABP Cafe คงไว้แยกตามเดิม
+      var GH_GROUP = ['GH', 'AH', 'BH'];
+      var ghKeys = rows.filter(function (b) { return GH_GROUP.indexOf(b.brand_code) >= 0; })
+                       .map(function (b) { return b.brand_key; });
+      if (ghKeys.length) {
+        var og = document.createElement('option');
+        og.value = ghKeys.join(',');
+        og.textContent = 'Greyhound Cafe';
+        sel.appendChild(og);
+      }
+      rows.filter(function (b) { return GH_GROUP.indexOf(b.brand_code) < 0; })
+          .forEach(function (b) {
+            var o = document.createElement('option');
+            o.value = b.brand_key; o.textContent = b.brand_name;
+            sel.appendChild(o);
+          });
     });
     loadBranchOptions('');
   }
