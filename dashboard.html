@@ -316,40 +316,13 @@
         <div style="background: #FFFFFF; border: 1px solid #E7E5DE; border-radius: 14px; padding: 20px 20px 10px; display: flex; flex-direction: column;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
             <div style="font-family: 'Space Grotesk', sans-serif; font-size: 15.5px; font-weight: 600; color: #14171F;">Alert Center</div>
-            <span style="font-size: 11px; font-weight: 700; color: #B23B3B; background: #F7E2E0; padding: 2px 8px; border-radius: 20px;">4 ใหม่</span>
+            <span id="alertBadge" style="font-size: 11px; font-weight: 700; color: #B23B3B; background: #F7E2E0; padding: 2px 8px; border-radius: 20px; display:none;">0 ใหม่</span>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 10px;">
-            <div style="display: flex; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid #F0EFE9;">
-              <span style="width: 6px; border-radius: 4px; background: #B23B3B; flex: 0 0 6px;"></span>
-              <div>
-                <div style="font-size: 12.5px; font-weight: 600; color: #14171F; line-height: 1.4;">ยอดขายสาขา Thonglor ลดลง 12% เทียบสัปดาห์ก่อน</div>
-                <div style="font-size: 11px; color: #9498A6; margin-top: 2px;">2 ชม.ที่แล้ว · Branch Performance</div>
-              </div>
-            </div>
-            <div style="display: flex; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid #F0EFE9;">
-              <span style="width: 6px; border-radius: 4px; background: #A6772C; flex: 0 0 6px;"></span>
-              <div>
-                <div style="font-size: 12.5px; font-weight: 600; color: #14171F; line-height: 1.4;">Void Rate สาขา Icon Siam สูงผิดปกติ (3.8%)</div>
-                <div style="font-size: 11px; color: #9498A6; margin-top: 2px;">5 ชม.ที่แล้ว · Exception</div>
-              </div>
-            </div>
-            <div style="display: flex; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid #F0EFE9;">
-              <span style="width: 6px; border-radius: 4px; background: #A6772C; flex: 0 0 6px;"></span>
-              <div>
-                <div style="font-size: 12.5px; font-weight: 600; color: #14171F; line-height: 1.4;">Food Cost % เดือนนี้ 34.2% สูงกว่าเป้า 30%</div>
-                <div style="font-size: 11px; color: #9498A6; margin-top: 2px;">วันนี้ · Food Cost</div>
-              </div>
-            </div>
-            <div style="display: flex; gap: 10px; padding-bottom: 10px;">
-              <span style="width: 6px; border-radius: 4px; background: #9498A6; flex: 0 0 6px;"></span>
-              <div>
-                <div style="font-size: 12.5px; font-weight: 600; color: #14171F; line-height: 1.4;">เมนู "Lemon Tart" ยอดขายต่ำกว่าค่าเฉลี่ย 40% ต่อเนื่อง 5 วัน</div>
-                <div style="font-size: 11px; color: #9498A6; margin-top: 2px;">เมื่อวาน · Menu Analysis</div>
-              </div>
-            </div>
+          <div id="alertList" style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-size: 12.5px; color: #9498A6; padding: 8px 0;">กำลังโหลด…</div>
           </div>
-          <a href="#" style="margin-top: 10px; font-size: 12px; font-weight: 600; padding: 10px 0; text-align: center; border-top: 1px solid #F0EFE9;">ดูทั้งหมด →</a>
+          <a id="alertMore" href="#" style="margin-top: 10px; font-size: 12px; font-weight: 600; padding: 10px 0; text-align: center; border-top: 1px solid #F0EFE9; display:none;">ดูทั้งหมด →</a>
         </div>
       </div>
 
@@ -801,6 +774,41 @@
       var s = String(d.date_key);
       setText('dataDate', 'ข้อมูลวันที่ ' + s.slice(6,8) + '/' + s.slice(4,6) + '/' + s.slice(0,4));
     });
+
+    // Alert Center — ข้อมูลจริงจาก /alerts (อิงวันที่ปลายช่วง + แบรนด์ที่เลือก)
+    (function () {
+      function esc(x) { return String(x == null ? '' : x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+      var t = document.getElementById('fltTo').value;
+      var brand = document.getElementById('fltBrand').value;
+      var ap = [];
+      if (t) ap.push('date=' + t.replace(/-/g, ''));
+      if (brand) ap.push('brand=' + brand);
+      apiGet('/alerts' + (ap.length ? '?' + ap.join('&') : '')).then(function (d) {
+        var box = document.getElementById('alertList');
+        var badge = document.getElementById('alertBadge');
+        var more = document.getElementById('alertMore');
+        if (!box) return;
+        var rows = (d && d.alerts) || [];
+        if (!rows.length) {
+          box.innerHTML = '<div style="font-size:12.5px;color:#9498A6;padding:8px 0;">ไม่มีการแจ้งเตือน ✓</div>';
+          if (badge) badge.style.display = 'none';
+          if (more) more.style.display = 'none';
+          return;
+        }
+        var colorOf = { high: '#B23B3B', medium: '#A6772C', low: '#9498A6' };
+        var show = rows.slice(0, 4);
+        box.innerHTML = show.map(function (a, i) {
+          var c = colorOf[a.severity] || '#9498A6';
+          var last = i === show.length - 1;
+          return '<div style="display:flex;gap:10px;padding-bottom:10px;' + (last ? '' : 'border-bottom:1px solid #F0EFE9;') + '">'
+            + '<span style="width:6px;border-radius:4px;background:' + c + ';flex:0 0 6px;"></span>'
+            + '<div><div style="font-size:12.5px;font-weight:600;color:#14171F;line-height:1.4;">' + esc(a.title) + '</div>'
+            + '<div style="font-size:11px;color:#9498A6;margin-top:2px;">' + esc(a.category) + '</div></div></div>';
+        }).join('');
+        if (badge) { badge.textContent = rows.length + ' ใหม่'; badge.style.display = ''; }
+        if (more) { more.style.display = rows.length > 4 ? '' : 'none'; more.textContent = 'ดูทั้งหมด (' + rows.length + ') →'; }
+      });
+    })();
 
     // Top Menu
     apiGet('/top-menu' + (q ? q + '&limit=5' : '?limit=5')).then(function (rows) {
